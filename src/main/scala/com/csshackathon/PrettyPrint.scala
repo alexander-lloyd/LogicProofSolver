@@ -1,7 +1,7 @@
 package com.csshackathon
 
 
-class PrettyPrint {
+object PrettyPrint {
 
   def pretty(tree : TokenTree): String = {
     tree match {
@@ -94,19 +94,17 @@ object TestPrettyPrint extends App{
     var tokens = Scanner.scan(l)
 
     var p = new Parser(tokens)
-    var pretty = new PrettyPrint()
-    println(pretty.pretty(p.parse()))
+    println(PrettyPrint.pretty(p.parse()))
   }
 
   def test2: Unit = {
-    var testString: String = "~AvB^C"
+    var testString: String = "~(AvB)^C"
     var l : List[Char] = testString.toList
 
     var tokens = Scanner.scan(l)
 
     var p = new Parser(tokens)
-    var pretty = new PrettyPrint()
-    println(pretty.pretty(p.parse()))
+    println(PrettyPrint.pretty(p.parse()))
   }
 
 
