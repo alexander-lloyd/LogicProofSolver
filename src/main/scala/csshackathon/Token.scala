@@ -1,4 +1,4 @@
-package com.csshackathon
+package csshackathon
 
 abstract class Token
 

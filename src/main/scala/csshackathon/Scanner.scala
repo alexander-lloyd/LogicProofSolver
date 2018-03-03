@@ -1,4 +1,6 @@
-package com.csshackathon
+package csshackathon
+
+import com.csshackathon._
 
 object Scanner extends App{
 
