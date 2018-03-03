@@ -49,7 +49,7 @@ class ParseError(message: String) extends Error
 class Parser (tokens: List[Token], current : Int = 0) {
 
   def parse(): TokenTree = {
-    val (tree : TokenTree, rest : List[Token]) = expr(this.tokens);
+    val (tree : TokenTree, rest : List[Token]) = expr(this.tokens)
     if (rest != List[Token]()) {
       throw new ParseError("Error, this is left: " + rest.toString)
     }
@@ -64,7 +64,7 @@ class Parser (tokens: List[Token], current : Int = 0) {
 
 //        if (rest != List[Token]()) throw new ParseError("Error parsing in expr")
 //        else
-          (new OpNeg(subtree), List[Token]())
+          (new OpNeg(subtree), rest)
 
       case ts =>
         val (subtree, rest) = expr1(ts)
@@ -83,7 +83,7 @@ class Parser (tokens: List[Token], current : Int = 0) {
     rest match {
       case List() => (ps_expr, List())
       case Conjunction() :: ts => {
-        val (ps_expr2, rest) = expr2(ts)
+        val (ps_expr2, rest) = expr1(ts)
         ps_expr = new OpAnd(ps_expr, ps_expr2)
         (ps_expr, rest)
       }
@@ -102,7 +102,7 @@ class Parser (tokens: List[Token], current : Int = 0) {
     rest match {
       case List() => (ps_expr, List())
       case Disjunction() :: ts => {
-        val (ps_expr2, rest) = expr3(ts)
+        val (ps_expr2, rest) = expr2(ts)
         ps_expr = new OpOr(ps_expr, ps_expr2)
         (ps_expr, rest)
       }
@@ -121,7 +121,7 @@ class Parser (tokens: List[Token], current : Int = 0) {
     rest match {
       case List() => (ps_expr, List())
       case Implication() :: ts => {
-        val (ps_expr2, rest) = expr4(ts)
+        val (ps_expr2, rest) = expr3(ts)
         ps_expr = new OpImp(ps_expr, ps_expr2)
         (ps_expr, rest)
       }
@@ -140,7 +140,7 @@ class Parser (tokens: List[Token], current : Int = 0) {
     rest match {
       case List() => (ps_expr, List())
       case Equivalence() :: ts => {
-        val (ps_expr2, rest) = primary(ts)
+        val (ps_expr2, rest) = expr4(ts)
         ps_expr = new OpImp(ps_expr, ps_expr2)
         (ps_expr, rest)
       }
@@ -157,12 +157,15 @@ class Parser (tokens: List[Token], current : Int = 0) {
     tokens match {
       case OpenBracket() :: ts => {
         val (ps_expr, rest) = expr(ts)
-        val rest2 = _consume(CloseBracket(), rest)
+        val rest2 = _consume(CloseBracket(), rest, "Missing Closing Bracket")
         (ps_expr, rest2)
       }
       case Var(c : Char) :: ts => {
         (new Variable(c.toString), ts)
       }
+//      case _ => {
+//        (ps_expr, rest)
+//      }
     }
   }
 
@@ -173,11 +176,11 @@ class Parser (tokens: List[Token], current : Int = 0) {
     tokens.head == token
   }
 
-  private def _consume(token: Token, tokens: List[Token]) : List[Token] = {
+  private def _consume(token: Token, tokens: List[Token], reason: String = "") : List[Token] = {
     if (_match(token, tokens)) {
       tokens.tail
     } else {
-      throw new ParseError("Error parsing: " + token.toString)
+      throw new ParseError("Error parsing: " + token.toString + " Reason: " + reason)
     }
   }
 }
@@ -190,7 +193,9 @@ object TestParser extends App{
     var tokens = Scanner.scan(l)
 
     var p = new Parser(tokens)
-    println(p.parse())
+    var out = p.parse()
+//    assert(out isInstanceOf OpNeg)
+    println(out)
   }
 
   def test2: Unit = {
@@ -213,7 +218,50 @@ object TestParser extends App{
     println(p.parse())
   }
 
+  def test4: Unit = {
+    var testString: String = "A^B v C"
+    var l: List[Char] = testString.toList
+
+    var tokens = Scanner.scan(l)
+
+    var p = new Parser(tokens)
+
+    var out = p.parse()
+
+    println(p.parse())
+  }
+
+  def test5: Unit = {
+    var testString: String = "(~A^B)"
+    var l: List[Char] = testString.toList
+
+    var tokens = Scanner.scan(l)
+
+    var p = new Parser(tokens)
+
+    var out = p.parse()
+
+    println(p.parse())
+  }
+
+  def test6: Unit = {
+    var testString: String = "A^A^A^A^AvB"
+    var l: List[Char] = testString.toList
+
+    var tokens = Scanner.scan(l)
+
+    var p = new Parser(tokens)
+
+    var out = p.parse()
+
+    println(p.parse())
+  }
+
+
   test1
   test2
   test3
+  test4
+  test5
+  test6
 }
