@@ -1,9 +1,7 @@
-package csshackathon
+package com.csshackathon
 
-import com.csshackathon._
 
-object Scanner extends App{
-
+object Scanner {
 
   def main(args: Array[String]): Unit = {
     var str : String = "^A"
@@ -14,7 +12,7 @@ object Scanner extends App{
     inputString match {
       case List() => {List[Token]()}
       case '~' :: xs => {
-         Negation() :: scan(xs)
+        Negation() :: scan(xs)
       }
       case '^' :: xs => {
         Conjunction() :: scan(xs)
