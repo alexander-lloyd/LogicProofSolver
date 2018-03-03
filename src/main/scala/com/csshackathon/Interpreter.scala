@@ -1,6 +1,9 @@
 package com.csshackathon
 
 import java.util.logging.Logger
+import java.util.logging.Level
+
+import scala.collection.mutable
 
 
 
@@ -17,11 +20,14 @@ class Printer extends Command {
 class Resolver extends Command {
   override def action(tree: TokenTree): Unit = {
     var logger: Logger = Logger.getLogger(this.getClass.getCanonicalName)
+    logger.setLevel(Level.OFF)
     logger.info("Original " + PrettyPrint.pretty(tree))
     val cnf = CNF.toCNF(tree)
     logger.info("CNF " + PrettyPrint.pretty(cnf))
-    val sets = CNF.toSets(cnf)
-    println(sets)
+    val sets: Set[Set[TokenTree]] = CNF.toSets(cnf)
+    val mutableSets = mutable.Set(sets.toArray)
+    val didResolve = Resolution.resolution(mutableSets)
+    println(didResolve)
   }
 }
 
