@@ -157,8 +157,8 @@ class Parser (tokens: List[Token], current : Int = 0) {
     tokens match {
       case OpenBracket() :: ts => {
         val (ps_expr, rest) = expr(ts)
-        _consume(CloseBracket(), rest)
-        (ps_expr, rest)
+        val rest2 = _consume(CloseBracket(), rest)
+        (ps_expr, rest2)
       }
       case Var(c : Char) :: ts => {
         (new Variable(c.toString), ts)
