@@ -1,16 +1,16 @@
 package com.csshackathon
-import com.csshackathon.Token
 
-class Scanner {
+object Scanner extends App{
 
 
   def main(args: Array[String]): Unit = {
     var str : String = "^A"
-    scan(str.toList)
+    println(scan(str.toList))
   }
 
   def scan(inputString:  List[Char]): List[Token] ={
     inputString match {
+      case List() => {List[Token]()}
       case '~' :: xs => {
          Negation() :: scan(xs)
       }
@@ -34,11 +34,11 @@ class Scanner {
       }
       case x::xs => {
         if (x.isUpper){
-          Var(x) :: scan(xs)
-        } else {
-          throw Exception
+          return Var(x) :: scan(xs)
         }
+        throw new Exception()
       }
+
     }
   }
 
