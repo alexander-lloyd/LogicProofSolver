@@ -99,7 +99,7 @@ object TestPrettyPrint extends App{
   }
 
   def test2: Unit = {
-    var testString: String = "(~A)vB^C"
+    var testString: String = "~AvB^C"
     var l : List[Char] = testString.toList
 
     var tokens = Scanner.scan(l)
