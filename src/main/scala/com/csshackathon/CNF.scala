@@ -4,6 +4,12 @@ object CNF {
 
   def toCNF(tokenTree: TokenTree): TokenTree ={
     tokenTree match {
+      case OpEqu(left, right) => {
+        OpAnd(toCNF(OpImp(left, right)), toCNF(OpImp(right, left)))
+      }
+      case OpImp(left, right) => {
+        OpOr(OpNeg(toCNF(left)), toCNF(right))
+      }
       case OpNeg(OpNeg(left)) => {
         toCNF(left)
       }

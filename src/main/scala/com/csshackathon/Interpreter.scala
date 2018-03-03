@@ -18,6 +18,14 @@ class Printer extends Command {
 }
 
 class Resolver extends Command {
+  private def convertNestedSettoMutableSet(set: Set[Set[TokenTree]]): mutable.Set[mutable.Set[TokenTree]] = {
+    var result = mutable.Set[mutable.Set[TokenTree]]()
+    for (x <- set) {
+      result = result + mutable.Set[TokenTree](x.toSeq: _*)
+    }
+    result
+  }
+
   override def action(tree: TokenTree): Unit = {
     var logger: Logger = Logger.getLogger(this.getClass.getCanonicalName)
     logger.setLevel(Level.OFF)
@@ -25,7 +33,7 @@ class Resolver extends Command {
     val cnf = CNF.toCNF(tree)
     logger.info("CNF " + PrettyPrint.pretty(cnf))
     val sets: Set[Set[TokenTree]] = CNF.toSets(cnf)
-    val mutableSets = mutable.Set(sets.toArray)
+    val mutableSets = convertNestedSettoMutableSet(sets)
     val didResolve = Resolution.resolution(mutableSets)
     println(didResolve)
   }

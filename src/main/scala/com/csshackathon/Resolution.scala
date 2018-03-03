@@ -12,7 +12,10 @@ object Resolution {
         if (resolvent.isEmpty){
           return true
         }
-        applyTo = applyTo | resolvent
+        applyTo = resolve(applyTo, resolvent)
+        if (applyTo.isEmpty){
+          return true
+        }
       }
     }
     return false //TODO
@@ -20,12 +23,14 @@ object Resolution {
 
   def resolve(set1 : mutable.Set[TokenTree] , set2 : mutable.Set[TokenTree]): mutable.Set[TokenTree] ={
     val unionSet = set1 union set2
+    val newUnion = mutable.Set(unionSet.toSeq: _*)
     for(x <- unionSet.toIterator){
       if (unionSet contains OpNeg(x)){
-        unionSet -= (x, OpNeg(x))
+        newUnion.remove(x)
+        newUnion.remove(OpNeg(x))
       }
     }
-    unionSet
+    newUnion
   }
 
 
