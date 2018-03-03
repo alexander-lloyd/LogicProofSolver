@@ -10,7 +10,7 @@ object CNF {
       case OpNeg(OpOr(left, right)) => {
         OpAnd(OpNeg(toCNF(left)) , OpNeg(toCNF(right)))
       }
-      case OpNeg(OpOr(left, right)) => {
+      case OpNeg(OpAnd(left, right)) => {
         OpOr(OpNeg(toCNF(left)),OpNeg(toCNF(right)))
       }
       case OpOr(p, OpAnd(q,r)) => {
