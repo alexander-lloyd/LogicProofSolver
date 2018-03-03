@@ -83,7 +83,7 @@ class Parser (tokens: List[Token], current : Int = 0) {
     rest match {
       case List() => (ps_expr, List())
       case Conjunction() :: ts => {
-        val (ps_expr2, rest) = expr2(ts)
+        val (ps_expr2, rest) = expr1(ts)
         ps_expr = new OpAnd(ps_expr, ps_expr2)
         (ps_expr, rest)
       }
@@ -102,7 +102,7 @@ class Parser (tokens: List[Token], current : Int = 0) {
     rest match {
       case List() => (ps_expr, List())
       case Disjunction() :: ts => {
-        val (ps_expr2, rest) = expr3(ts)
+        val (ps_expr2, rest) = expr2(ts)
         ps_expr = new OpOr(ps_expr, ps_expr2)
         (ps_expr, rest)
       }
@@ -121,7 +121,7 @@ class Parser (tokens: List[Token], current : Int = 0) {
     rest match {
       case List() => (ps_expr, List())
       case Implication() :: ts => {
-        val (ps_expr2, rest) = expr4(ts)
+        val (ps_expr2, rest) = expr3(ts)
         ps_expr = new OpImp(ps_expr, ps_expr2)
         (ps_expr, rest)
       }
@@ -140,7 +140,7 @@ class Parser (tokens: List[Token], current : Int = 0) {
     rest match {
       case List() => (ps_expr, List())
       case Equivalence() :: ts => {
-        val (ps_expr2, rest) = primary(ts)
+        val (ps_expr2, rest) = expr4(ts)
         ps_expr = new OpImp(ps_expr, ps_expr2)
         (ps_expr, rest)
       }
@@ -245,7 +245,7 @@ object TestParser extends App{
   }
 
   def test6: Unit = {
-    var testString: String = "A^A^A^A^A"
+    var testString: String = "A^A^A^A^AvB"
     var l: List[Char] = testString.toList
 
     var tokens = Scanner.scan(l)
