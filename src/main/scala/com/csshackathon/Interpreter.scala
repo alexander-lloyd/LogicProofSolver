@@ -2,26 +2,61 @@ package com.csshackathon
 
 import sun.misc.{Signal, SignalHandler}
 
-object Interpreter extends App {
-  val start = System.nanoTime()
 
-  Signal.handle(new Signal("INT"), new SignalHandler() {
-    def handle(sig: Signal) {
-      println(f"\nProgram execution took ${(System.nanoTime() - start) / 1e9f}%f seconds\n")
-      sys.exit(0)
+trait Command {
+  def action(tree: TokenTree): Unit
+}
+
+class Printer extends Command {
+  override def action(tree: TokenTree): Unit = {
+    println(PrettyPrint.pretty(tree))
+  }
+}
+
+class Resolver extends Command {
+  override def action(tree: TokenTree): Unit = ???
+}
+
+object Interpreter {
+  def help(): Unit = {
+    println("Help: ")
+    println("\t-r Resolution Mode")
+    println("\t-p Pretty Printer Mode")
+  }
+
+
+  def main(args:Array[String]): Unit = {
+
+    // Get mode
+    var command: Command = null
+
+    if (args.length == 0) {
+      help()
+      sys.exit(1)
     }
-  })
 
-  while(true) {
-    val input: String = Console.readLine(">>> ")
+    args.head match {
+      case "-r" => command = new Resolver()
+      case "-p" => command = new Printer()
+      case unknown => {
+        println("Unknown argument: " + unknown)
+        help()
+        sys.exit(1)
+      }
+    }
 
-    val tokens: List[Token] = Scanner.scan(input.toList)
+    while(true) {
+      val input: String = Console.readLine(">>> ")
 
-    val parser: Parser = new Parser(tokens)
-    val tree: TokenTree = parser.parse()
+      val tokens: List[Token] = Scanner.scan(input.toList)
 
-    // TODO: Apply Resolution
-    println(tree)
+      val parser: Parser = new Parser(tokens)
+      val tree: TokenTree = parser.parse()
+
+      command.action(tree)
+
+    }
+
   }
 
 }
