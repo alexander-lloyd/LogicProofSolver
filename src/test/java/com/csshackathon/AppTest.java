@@ -1,4 +1,4 @@
-package test.java.com.csshackathon;
+package com.csshackathon;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

@@ -1,4 +1,4 @@
-package main.java.com.csshackathon;
+package com.csshackathon;
 
 /**
  * Hello world!
