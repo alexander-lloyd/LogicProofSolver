@@ -1,15 +1,12 @@
 package com.csshackathon
+import com.csshackathon.Token
 
 class Scanner {
 
 
   def main(args: Array[String]): Unit = {
-    //Char[] toScan = "~A"
-
-  }
-
-  def toChar(str : String): List[Char]={
-    str.toCharArray()
+    var str : String = "^A"
+    scan(str.toList)
   }
 
   def scan(inputString:  List[Char]): List[Token] ={
