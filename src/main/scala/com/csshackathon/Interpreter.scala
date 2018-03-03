@@ -1,6 +1,7 @@
 package com.csshackathon
 
-import sun.misc.{Signal, SignalHandler}
+import java.util.logging.Logger
+
 
 
 trait Command {
@@ -14,7 +15,14 @@ class Printer extends Command {
 }
 
 class Resolver extends Command {
-  override def action(tree: TokenTree): Unit = ???
+  override def action(tree: TokenTree): Unit = {
+    var logger: Logger = Logger.getLogger(this.getClass.getCanonicalName)
+    logger.info("Original " + PrettyPrint.pretty(tree))
+    val cnf = CNF.toCNF(tree)
+    logger.info("CNF " + PrettyPrint.pretty(cnf))
+    val sets = CNF.toSets(cnf)
+    println(sets)
+  }
 }
 
 object Interpreter {
@@ -35,7 +43,7 @@ object Interpreter {
       sys.exit(1)
     }
 
-    args.head match {
+    args.head.toLowerCase match {
       case "-r" => command = new Resolver()
       case "-p" => command = new Printer()
       case unknown => {

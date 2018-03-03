@@ -16,9 +16,12 @@ object CNF {
       case OpOr(p, OpAnd(q,r)) => {
         OpAnd(OpOr(toCNF(p), toCNF(q)), OpOr(toCNF(p),toCNF(r)))
       }
-      case OpAnd(p, OpOr(q,r)) => {
-        OpOr(OpAnd(toCNF(p),toCNF(q)), OpAnd(toCNF(p),toCNF(r)))
+      case OpOr(OpAnd(q,r), p) => {
+        OpAnd(OpOr(toCNF(p), toCNF(q)), OpOr(toCNF(p),toCNF(r)))
       }
+//      case OpAnd(p, OpOr(q,r)) => {
+//        OpOr(OpAnd(toCNF(p),toCNF(q)), OpAnd(toCNF(p),toCNF(r)))
+//      }
       case OpAnd(p,q) => {
         OpAnd(toCNF(p), toCNF(q))
       }
@@ -36,6 +39,20 @@ object CNF {
       }
       case Variable(p) => {
         Variable(p)
+      }
+    }
+  }
+
+  def toSets(tree: TokenTree) : Set[Set[TokenTree]] = {
+    tree match {
+      case Variable(s) => Set(Set(Variable(s)))
+      case OpNeg(wff) => Set(Set(OpNeg(wff)))
+      case OpOr(l, r) => {
+        // TODO: Not sure...
+        Set(toSets(l).head ++ toSets(r).head)
+      }
+      case OpAnd(l, r) => {
+        toSets(l) ++ toSets(r)
       }
     }
   }
