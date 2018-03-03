@@ -2,32 +2,32 @@ package com.csshackathon
 
 abstract class TokenTree
 
-class Variable(variable: String) extends TokenTree {
+case class Variable(variable: String) extends TokenTree {
   override def toString: String = {
     this.variable
   }
 }
-class OpNeg(left: TokenTree) extends TokenTree {
+case class OpNeg(left: TokenTree) extends TokenTree {
   override def toString: String = {
     "~" + this.left
   }
 }
-class OpAnd(left: TokenTree, right : TokenTree) extends TokenTree {
+case class OpAnd(left: TokenTree, right : TokenTree) extends TokenTree {
   override def toString: String = {
     this.left + "^" + this.right
   }
 }
-class OpOr(left: TokenTree, right : TokenTree) extends TokenTree {
+case class OpOr(left: TokenTree, right : TokenTree) extends TokenTree {
   override def toString: String = {
     this.left + "v" + this.right
   }
 }
-class OpImp(left: TokenTree, right: TokenTree) extends TokenTree {
+case class OpImp(left: TokenTree, right: TokenTree) extends TokenTree {
   override def toString: String = {
     this.left + "->" + this.right
   }
 }
-class OpEqu(left: TokenTree, right: TokenTree) extends TokenTree {
+case class OpEqu(left: TokenTree, right: TokenTree) extends TokenTree {
   override def toString: String = {
     this.left + "<->" + this.right
   }

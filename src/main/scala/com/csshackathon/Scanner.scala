@@ -5,7 +5,7 @@ class ScannerError(message: String) extends Error
 object Scanner {
 
   def main(args: Array[String]): Unit = {
-    var str : String = "^A<->()~^v"
+    var str : String = "^A<->()~^v  "
     println(scan(str.toList))
   }
 
